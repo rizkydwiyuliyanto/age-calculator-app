@@ -47,12 +47,13 @@ var emptyInput = {
 }
 var monthIsValid = true;
 const lightRed = "#ff5757"
-const lightGrey = "#dbdbdb"
+const lightGrey = "#dbdbdb";
+const smokeGrey = "#716f6f";
 const setMessageEmpty = (value, label, message, prop, input) => {
     if (!value) {
         message.innerText = "The field is required"
         label.style.color = "#ff5757";
-        input.style.border = "1px solid "+lightRed
+        input.style.border = "1px solid " + lightRed
         emptyInput = {
             ...emptyInput,
             [prop]: true
@@ -60,22 +61,66 @@ const setMessageEmpty = (value, label, message, prop, input) => {
     } else {
         message.innerText = ""
         label.style.color = "#716f6f";
-        input.style.border = "1px solid "+lightGrey
+        input.style.border = "1px solid " + lightGrey
         emptyInput = {
             ...emptyInput,
             [prop]: false
         }
     }
 }
+const daysInMonth = (month, year) => {
+    return new Date(parseInt(year), parseInt(month), 0).getDate();
+}
 const setAge = () => {
+    console.log(error)
+    console.log(emptyInput)
     if (!Object.keys(error).find(prop => { return error[prop] })) {
+        const inputs = document.querySelectorAll('.input');
+        const labels = document.querySelectorAll('.label');
+        var d = daysInMonth(input_months.value, input_years.value);
         let yearsValue = parseInt(input_years.value)
         let monthsValue = parseInt(input_months.value) - 1
         let daysValue = parseInt(input_days.value)
         const age = getAge(yearsValue, monthsValue, daysValue);
-        years.innerText = age.years;
-        months.innerText = age.months;
-        days.innerText = age.days;
+        let date = new Date(yearsValue, monthsValue, daysValue);
+        console.log(date)
+        let isDateValid = false
+        let past = false
+        if (date.getTime() > new Date().getTime()) {
+            past = true;
+            document.getElementById("error-year-message").innerText = "Must be in the past"
+            inputs.forEach((elem, idx) => {
+                // elem.style.display = "none"
+                labels[idx].style.color = lightRed
+                elem.style.border = "1px solid " + lightRed
+            })
+        } else {
+            document.getElementById("error-year-message").innerText = ""
+            inputs.forEach((elem, idx) => {
+                labels[idx].style.color = smokeGrey
+                elem.style.border = "1px solid " + lightGrey
+            })
+            if (daysValue > d) {
+                document.getElementById("error-days-message").innerText = "Must be a valid date";
+                inputs.forEach((elem, idx) => {
+                    labels[idx].style.color = lightRed
+                    elem.style.border = "1px solid " + lightRed
+                })
+                isDateValid = false
+            } else {
+                document.getElementById("error-days-message").innerText = "";
+                inputs.forEach((elem, idx) => {
+                    labels[idx].style.color = smokeGrey
+                    elem.style.border = "1px solid " + lightGrey
+                })
+                isDateValid = true
+            }
+        }
+        if (isDateValid && !past) {
+            years.innerText = age.years;
+            months.innerText = age.months;
+            days.innerText = age.days;
+        }
     }
 }
 
@@ -84,7 +129,7 @@ const setValidMonth = () => {
         if (input_months.value > 12) {
             document.getElementById("error-months-label").style.color = "#ff5757"
             document.getElementById("error-months-message").innerText = "Must be a valid month";
-            document.getElementById("inputMonths").style.border = "1px solid "+lightRed
+            document.getElementById("inputMonths").style.border = "1px solid " + lightRed
 
             error = {
                 ...error,
@@ -92,9 +137,9 @@ const setValidMonth = () => {
             }
             monthIsValid = false
         } else {
-            document.getElementById("error-months-label").style.color = "#716f6f"
+            document.getElementById("error-months-label").style.color = smokeGrey
             document.getElementById("error-months-message").innerText = "";
-            document.getElementById("inputMonths").style.border = "1px solid "+lightGrey
+            document.getElementById("inputMonths").style.border = "1px solid " + lightGrey
 
             error = {
                 ...error,
@@ -106,32 +151,28 @@ const setValidMonth = () => {
 }
 
 const setValidDay = () => {
-    const daysInMonth = (month, year) => {
-        return new Date(parseInt(year), parseInt(month), 0).getDate();
-    }
     let text = ""
     let color = "#716f6f"
     let borderColor = "#dbdbdb"
     if (!emptyInput.month && !emptyInput.years) {
-        var d = daysInMonth(input_months.value, input_years.value);
         if (!emptyInput.days) {
             if (monthIsValid) {
                 color = "#ff5757"
-                text = "Must be a valid day"
-                borderColor=lightRed
+                text = "Must be a valid days"
+                borderColor = lightRed
             }
-            if (input_days.value > d) {
+            if (input_days.value > 31) {
                 document.getElementById("error-days-label").style.color = color
                 document.getElementById("error-days-message").innerText = text
-                document.getElementById("inputMonths").style.border = "1px solid "+borderColor
+                document.getElementById("inputDays").style.border = "1px solid " + borderColor
                 error = {
                     ...error,
                     days: true
                 }
             } else {
-                document.getElementById("error-days-label").style.color = "#716f6f"
+                document.getElementById("error-days-label").style.color = smokeGrey
                 document.getElementById("error-days-message").innerText = "";
-                document.getElementById("inputMonths").style.border = "1px solid "+lightGrey
+                document.getElementById("inputDays").style.border = "1px solid " + lightGrey
                 error = {
                     ...error,
                     days: false
@@ -143,22 +184,14 @@ const setValidDay = () => {
 
 const setValidYear = () => {
     if (!emptyInput.years) {
-        if (input_years.value > new Date().getFullYear()) {
-            error = {
-                ...error,
-                years: true
-            }
-            document.getElementById("error-year-label").style.color = "#ff5757"
-            document.getElementById("error-year-message").innerText = "Must be in the past"
-            document.getElementById("inputYears").style.border = "1px solid "+lightRed
-        } else {
-            error = {
-                ...error,
-                years: false
-            }
-            document.getElementById("error-year-label").style.color = "#716f6f"
-            document.getElementById("error-year-message").innerText = ""
-            document.getElementById("inputYears").style.border = "1px solid "+lightGrey
+        error = {
+            ...error,
+            years: false
+        }
+    } else {
+        error = {
+            ...error,
+            years: true
         }
     }
 }
@@ -174,7 +207,7 @@ input_days.onblur = (e) => {
 input_months.onblur = (e) => {
     const errorMessage = document.getElementById("error-months-message")
     const errorLabel = document.getElementById("error-months-label")
-    setMessageEmpty(e.target.value, errorLabel, errorMessage, 'month',input_months)
+    setMessageEmpty(e.target.value, errorLabel, errorMessage, 'month', input_months)
     setValidMonth();
     setValidDay()
     setAge()
@@ -182,7 +215,7 @@ input_months.onblur = (e) => {
 input_years.onblur = (e) => {
     const errorMessage = document.getElementById("error-year-message")
     const errorLabel = document.getElementById("error-year-label")
-    setMessageEmpty(e.target.value, errorLabel, errorMessage, 'years',input_years);
+    setMessageEmpty(e.target.value, errorLabel, errorMessage, 'years', input_years);
     setValidYear()
     setValidMonth()
     setValidDay()

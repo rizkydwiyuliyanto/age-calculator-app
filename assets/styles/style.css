@@ -3,11 +3,11 @@
   --white: hsl(0, 0%, 100%);
   --offwhite: hsl(0, 0%, 94%);
   --lightgrey: #dbdbdb;
-  --smokegrey: hsl(0, 1%, 44%);
+  --smokegrey: #716f6f;
   --offblack: hsl(0, 0%, 8%);
   --purple: hsl(259, 100%, 65%);
   --lightred: hsl(0, 100%, 67%);
-  --smalltext: 9px;
+  --smalltext: 8.5px;
 }
 @media screen and (min-width: 1440px) {
   :root {
@@ -75,8 +75,8 @@ input[type=number] {
 .forms .text-input {
   display: flex;
   flex-direction: column;
-  margin-right: 18px;
-  width: 22%;
+  margin-right: 14px;
+  width: 25%;
   position: relative;
 }
 .forms .text-input span {
