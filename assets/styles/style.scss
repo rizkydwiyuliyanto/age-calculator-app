@@ -43,7 +43,7 @@ input[type=number] {
     width: 100%;
     height: 100vh;
 
-    @media screen and (max-width: 375px) {
+    @media screen and (max-width: 400px) {
         align-items: flex-start;
         padding-top: 2em;
     }
@@ -58,7 +58,7 @@ input[type=number] {
     display: flex;
     flex-direction: column;
 
-    @media screen and (max-width: 375px) {
+    @media screen and (max-width: 400px) {
         width: 90%;
         height: 480px;
         justify-content: center;
@@ -118,18 +118,18 @@ input[type=number] {
             position: absolute;
             bottom: -20px;
 
-            @media screen and (max-width: 375px) {
+            @media screen and (max-width: 400px) {
                 bottom: -34px;
             }
         }
 
-        @media screen and (max-width: 375px) {
+        @media screen and (max-width: 400px) {
             width: 28%;
             margin: 0;
         }
     }
 
-    @media screen and (max-width:375px) {
+    @media screen and (max-width:400px) {
         justify-content: space-between;
     }
 }
@@ -161,7 +161,7 @@ input[type=number] {
         z-index: 10;
     }
 
-    @media screen and (max-width: 375px) {
+    @media screen and (max-width: 400px) {
         justify-content: center;
         margin-top: 28px;
     }
@@ -190,7 +190,7 @@ input[type=number] {
                 margin-left: 2px;
             }
 
-            @media screen and (max-width: 375px) {
+            @media screen and (max-width: 400px) {
                 font-size: 48px;
             }
         }
